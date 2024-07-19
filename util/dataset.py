@@ -106,6 +106,8 @@ def build_dataset(cfg: dict, split: str) -> ECGDataset:
 
     index_dir = os.path.realpath(cfg["index_dir"])
     ecg_dir = os.path.realpath(cfg["ecg_dir"])
+    # print(f"index_dir: {index_dir}")##the path of index_dir: /home/phan635/AI_ECG/github-open/ST-MEM-pq/data/dummy
+    # print(f"ecg_dir: {ecg_dir}")##the path of ecg_dir: /home/phan635/AI_ECG/github-open/ST-MEM-pq/data/dummy/ecgs
 
     df_name = cfg.get(f"{split}_csv", None)
     assert df_name is not None, f"{split}_csv is not defined in the config."
