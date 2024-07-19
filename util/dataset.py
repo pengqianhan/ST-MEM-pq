@@ -48,7 +48,9 @@ class ECGDataset(Dataset):
         self.labels = labels
         self.target_lead = target_lead
         self.fs_list = fs_list
+        # print('fs_list:',fs_list)##sample rate of each file; [500,500,...,500]
         self.check_dataset()
+        ##target_fs: 250
         self.resample = T.Resample(target_fs=target_fs) if fs_list is not None else None
 
         self.transform = transform

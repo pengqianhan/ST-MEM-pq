@@ -55,9 +55,14 @@ class Resample:
 
     def __call__(self, x: np.ndarray, fs: Optional[int] = None) -> np.ndarray:
         if fs and self.target_fs and fs != self.target_fs:
+            # print(f"Resample from {fs} to {self.target_fs}.")##Resample from 500 to 250.
+            # print(f"Original shape: {x.shape}")##Original shape: (12, 5000)
             x = resample(x, int(x.shape[1] * self.target_fs / fs), axis=1)
+            # print(f"Resampled shape: {x.shape}")##Resampled shape: (12, 2500)
         elif self.target_length and x.shape[1] != self.target_length:
+            # print(f"Resample from {x.shape[1]} to {self.target_length}.")
             x = resample(x, self.target_length, axis=1)
+            # print(f"Resampled shape: {x.shape}")
         return x
 
 class RandomCrop:
