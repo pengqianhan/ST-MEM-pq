@@ -125,7 +125,12 @@ def main(config):
         print(f"Load pre-trained checkpoint from: {config['encoder_path']}")
         checkpoint_model = checkpoint['model']
         state_dict = model.state_dict()
-        for k in ['head.weight', 'head.bias']:
+        for k in ['head.weight', 'head.bias']:##
+            '''
+            这个循环检查 'head.weight' 和 'head.bias' 这两个键。
+            如果它们在预训练模型中存在，且形状与当前模型不匹配，就从预训练模型中删除这些键。
+            这通常是因为头部（输出层）在不同任务间可能有所不同。
+            '''
             if k in checkpoint_model and checkpoint_model[k].shape != state_dict[k].shape:
                 print(f"Remove key {k} from pre-trained checkpoint")
                 del checkpoint_model[k]
