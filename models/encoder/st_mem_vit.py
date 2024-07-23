@@ -122,6 +122,7 @@ class ST_MEM_ViT(nn.Module):
 
     def forward(self, series):
         x = self.forward_encoding(series)
+        # print('ST_MEM_ViT output shape:',x.shape)##[effective batch size=16, 768]
         return self.head(x)
 
     def __repr__(self):

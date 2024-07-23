@@ -121,8 +121,13 @@ def main(config):
         raise ValueError(f'Unsupported model name: {model_name}')
 
     if config['mode'] != "scratch":
+        # print(f"Load encoder from: {config['encoder_path']}")## ./models/encoder/st_mem_vit_base.pth
         checkpoint = torch.load(config['encoder_path'], map_location='cpu')
-        print(f"Load pre-trained checkpoint from: {config['encoder_path']}")
+        # print('checkpoint.keys()',checkpoint.keys())##['epoch', 'model', 'optimizer', 'scaler', 'config'])
+        # print("checkpoint['epoch']",checkpoint['epoch'])##799
+        # print("checkpoint['optimizer']",checkpoint['optimizer'])##None
+        # print("checkpoint['scaler']",checkpoint['scaler'])##None
+        # print("checkpoint['config']",checkpoint['config'])
         checkpoint_model = checkpoint['model']
         state_dict = model.state_dict()
         for k in ['head.weight', 'head.bias']:##
@@ -135,6 +140,12 @@ def main(config):
                 print(f"Remove key {k} from pre-trained checkpoint")
                 del checkpoint_model[k]
         msg = model.load_state_dict(checkpoint_model, strict=False)
+        ###the following code is used to check the model's parameters are loaded correctly
+        # for name, param in model.named_parameters():
+        #     if name in checkpoint_model:
+        #         print(f"{name}: {torch.allclose(param, checkpoint_model[name])}")
+        #         break
+        # print('----------the following is msg----------------------------')
         print(msg)
         assert set(msg.missing_keys) == {'head.weight', 'head.bias'}
 
@@ -167,7 +178,7 @@ def main(config):
     optimizer = get_optimizer_from_config(config['train'], model_without_ddp)
     print(optimizer)
     loss_scaler = NativeScaler()
-    criterion, output_act = build_loss_fn(config['loss'])
+    criterion, output_act = build_loss_fn(config['loss'])###针对我们的任务，可以修改build_loss_fn函数
     best_loss = float('inf')
     metric_fn, best_metrics = build_metric_fn(config['metric'])
     metric_fn.to(device)
@@ -175,9 +186,11 @@ def main(config):
     misc.load_model(config, model_without_ddp, optimizer, loss_scaler)
 
     # Start training
-    print(f"Start training for {config['train']['epochs']} epochs")
+    print(f"Start training for {config['train']['epochs']} epochs")##10
     start_time = time.time()
     use_amp = config['train'].get('use_amp', True)
+    # print("config['start_epoch']",config['start_epoch'])##0
+    # print("config['train']['epochs']",config['train']['epochs'])##10
     for epoch in range(config['start_epoch'], config['train']['epochs']):
         if config['ddp']['distributed']:
             data_loader_train.sampler.set_epoch(epoch)
