@@ -106,17 +106,22 @@ def build_dataset(cfg: dict, split: str) -> ECGDataset:
     target_lead = cfg.get("lead", "12lead")
     target_fs = cfg.get("fs", 250)
 
+    ## the path of datasets
     index_dir = os.path.realpath(cfg["index_dir"])
     ecg_dir = os.path.realpath(cfg["ecg_dir"])
     # print(f"index_dir: {index_dir}")##the path of index_dir: /home/phan635/AI_ECG/github-open/ST-MEM-pq/data/dummy
     # print(f"ecg_dir: {ecg_dir}")##the path of ecg_dir: /home/phan635/AI_ECG/github-open/ST-MEM-pq/data/dummy/ecgs
 
-    df_name = cfg.get(f"{split}_csv", None)
+    df_name = cfg.get(f"{split}_csv", None)##
+    print(f"df_name: {df_name}")##df_name: ptbxl_index.csv
     assert df_name is not None, f"{split}_csv is not defined in the config."
     df = pd.read_csv(os.path.join(index_dir, df_name))
+    ##fname_col = cfg.get("filename_col", "FILE_NAME")
     filenames = df[fname_col].tolist()
     fs_list = df[fs_col].astype(int).tolist() if fs_col is not None else None
+    # print('labels:',label_col)##labels: LABEL
     labels = df[label_col].astype(int).values if label_col is not None else None
+    # print('labels:',labels)##labels: None
 
     if split == "train":
         transforms = get_transforms_from_config(cfg["train_transforms"])

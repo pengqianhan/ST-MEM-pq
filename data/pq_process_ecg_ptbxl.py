@@ -34,7 +34,7 @@ def get_parser():
     parser.add_argument('--index_path',
                         type=str,
                         # default="./index.csv",
-                        default="/mnt/DataSets/phan635/ECG_datasets/processed_data/index.csv",
+                        default="/mnt/DataSets/phan635/ECG_datasets/processed_data/ptbxl_index.csv",
                         help="Path to the index file.")
     args = parser.parse_args()
     return args
@@ -77,7 +77,7 @@ def run(args):
     ###PTB-XL: 21799 records.
 
     # Prepare an index dataframe
-    index_df = pd.DataFrame(columns=["RELATIVE_FILE_PATH", "FILE_NAME", "SAMPLE_RATE", "SOURCE"])
+    index_df = pd.DataFrame(columns=["RELATIVE_FILE_PATH", "FILE_NAME", "SAMPLE_RATE", "LABEL"])
 
     # Save all the cropped signals
     num_saved = 0
