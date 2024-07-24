@@ -115,8 +115,10 @@ def main(config):
         log_writer = None
 
     model_name = config['model_name']
+    print(f"Model name: {model_name}")##Model name: st_mem_vit_base
     if model_name in encoder.__dict__:
         model = encoder.__dict__[model_name](**config['model'])
+        
     else:
         raise ValueError(f'Unsupported model name: {model_name}')
 
