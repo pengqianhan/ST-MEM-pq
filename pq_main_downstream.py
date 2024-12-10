@@ -83,7 +83,8 @@ def main(config):
     print(f'job dir: {os.path.dirname(os.path.realpath(__file__))}')
     print(yaml.dump(config, default_flow_style=False, sort_keys=False))
 
-    device = torch.device(config['device'])
+    # device = torch.device(config['device'])
+    device = torch.device(config['device'] if torch.cuda.is_available() else 'cpu')
 
     # fix the seed for reproducibility
     seed = config['seed'] + misc.get_rank()
